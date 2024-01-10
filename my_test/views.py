@@ -19,13 +19,13 @@ def post_string(request):
         #here, the client can choose the key, but we are choosing the key. in practice, id do smth like:
         # Get the list of keys from the POST data
             # keys = request.POST.keys()
-        test_str = request.GET.get('test_str')
+        test_str = request.GET.get('test_str') #this key must stay consistent for now
         print(test_str)
         if test_str is not None:
             try:
                 print(1)
                 str(test_str)
-                MyStrings.objects.create(my_string = test_str)
+                MyStrings.objects.create(my_string = test_str) #creates a new object in MyStrings model
                 return JsonResponse({"message": "Saved it"})
             except ValueError:
                 print(4)
@@ -40,8 +40,8 @@ def post_string(request):
 def get_strings(request):
     if request.method == "GET":
         my_strs = MyStrings.objects.all()
-        my_strs_output = list(my_strs.values())
-        return JsonResponse(data=my_strs_output, safe = False)
+        my_strs_output = list(my_strs.values()) #this is how we get a list of values to output
+        return JsonResponse(data=my_strs_output, safe = False) #its recommended to make safe false bc if true, it can only pass dicts
     else:
         return JsonResponse("didnt work")
     
@@ -55,3 +55,9 @@ def delete_this(request, string_id):
         return JsonResponse({"message": "String deleted successfully"})
     else:
         return JsonResponse({"message": "oops"})
+    
+    
+#for future ref: to send or recieve data, it's recommended to send a body, not send the data through the url
+#each request has a body, and this can be in json, javascript, html, etc.. anything to send some kind of data in
+#this data can be accessed using the request.body attribute of the instance of the request object
+#request is an instance of the class HttpRequest that encapsulates all the information about this request
