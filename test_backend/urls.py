@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 import my_test.views
 
+#to run server -> python3 manage.py runserver
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     
