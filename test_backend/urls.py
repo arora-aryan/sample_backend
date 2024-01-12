@@ -32,6 +32,8 @@ urlpatterns = [
 
     path('get_strs/', my_test.views.get_strings, name = 'get_strs'),
 
-    path('delete_this/<int:string_id>', my_test.views.delete_this, name = 'delete_string')
+    path('delete_this/<int:string_id>', my_test.views.delete_this, name = 'delete_string'),
+
+    path('new_user/', my_test.views.new_user, name = 'new_user'),
 ]
 

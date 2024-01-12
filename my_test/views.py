@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt  # Import this decorator if you want to disable CSRF protection for testing purposes
 from .models import TestInt, MyStrings
 from django.views.decorators.http import require_http_methods
+import json
 
 def home(request):
     return HttpResponse("Hello, World!")
@@ -12,6 +13,18 @@ def create_testint(request):
     new_integer = TestInt(my_integer = 5)
     new_integer.save()
     return HttpResponse("we saved it")
+
+@csrf_exempt  # Use this decorator to disable CSRF protection for testing purposes; remove it in production
+def new_user(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print(data)
+        username = data.get('username')
+        id = data.get('id')
+        birthday = data.get('birthday')
+
+    return HttpResponse(username, ' ', id, ' ', birthday, ' ')
+
 
 @csrf_exempt  # Use this decorator to disable CSRF protection for testing purposes; remove it in production
 def post_string(request):
@@ -44,7 +57,6 @@ def get_strings(request):
         return JsonResponse(data=my_strs_output, safe = False) #its recommended to make safe false bc if true, it can only pass dicts
     else:
         return JsonResponse("didnt work")
-    
 
 @require_http_methods(["DELETE"])
 @csrf_exempt #this is to bypass authentication bc auth is needed for deletion
@@ -57,7 +69,17 @@ def delete_this(request, string_id):
         return JsonResponse({"message": "oops"})
     
     
+
+
 #for future ref: to send or recieve data, it's recommended to send a body, not send the data through the url
 #each request has a body, and this can be in json, javascript, html, etc.. anything to send some kind of data in
 #this data can be accessed using the request.body attribute of the instance of the request object
 #request is an instance of the class HttpRequest that encapsulates all the information about this request
+    
+
+#backend structured in layers
+    #first layer is the controller layer w api endpoints
+    #no business logic in view -> first layer calls second
+    #second layer is service layer with business logic
+    #service layer calles third layer
+    #third layer is DAO -> data access objects (these are in models.py)
